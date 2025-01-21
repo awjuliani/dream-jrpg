@@ -1,3 +1,5 @@
+![Banner](banner.png)
+
 # One Trillion and One Nights
 
 An experiment in using LLMs to procedurally generate browser-based Japanese-style RPGs.
