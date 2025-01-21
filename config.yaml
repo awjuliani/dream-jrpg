@@ -1,0 +1,6 @@
+provider: openai
+model_size: large
+image_style: Modern Anime
+image_model: black-forest-labs/flux-schnell
+use_cache: false
+cheat_mode: false

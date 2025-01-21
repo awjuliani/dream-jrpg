@@ -1,0 +1,8 @@
+uvicorn[standard]
+fastapi
+asyncio
+numpy
+openai
+replicate
+requests
+pillow
