@@ -1,6 +1,16 @@
-provider: openai
+# provider: openai
+# model_size: large
+# image_style: Modern
+# image_model: black-forest-labs/flux-schnell
+# use_cache: false
+# cheat_mode: false
+
+
+provider: universal
 model_size: large
+model_id: llama-3.3-70b-specdec
 image_style: Modern
 image_model: black-forest-labs/flux-schnell
+
 use_cache: false
 cheat_mode: false

@@ -4,6 +4,7 @@ import yaml
 from pathlib import Path
 from src.api.prompts import Prompts
 from src.utils.utils import load_config
+from src.api.providers import UniversalProvider
 
 
 class LLM:
@@ -24,22 +25,30 @@ class LLM:
         # Use the shared config loader
         config = load_config()
         self.set_provider(
-            config.get("provider", "openai"), config.get("model_size", "small")
+            config.get("provider", "openai"),
+            config.get("model_size", "small"),
+            model_id=config.get("model_id"),
+            api_base=config.get("api_base"),
+            api_key=config.get("api_key")
         )
         self.use_cache = config.get("use_cache", False)
 
-    def set_provider(self, provider: str, model_size: str = "small"):
-        if provider.lower() == "openai":
+    def set_provider(self, provider: str, model_size: str = "small", model_id: str = None, api_base: str = None, api_key: str = None):
+        if provider.lower() == "universal":
+            self.provider = UniversalProvider(
+                model_size=model_size,
+                model_id=model_id,
+                api_base=api_base,
+                api_key=api_key
+            )
+        elif provider.lower() == "openai":
             from src.api.providers import OpenAIProvider
-
             self.provider = OpenAIProvider(model_size=model_size)
         elif provider.lower() == "anthropic":
             from src.api.providers import AnthropicProvider
-
             self.provider = AnthropicProvider(model_size=model_size)
         elif provider.lower() == "gemini":
             from src.api.providers import GeminiProvider
-
             self.provider = GeminiProvider(model_size=model_size)
         else:
             raise ValueError(f"Unsupported provider: {provider}")

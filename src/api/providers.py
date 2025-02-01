@@ -119,3 +119,58 @@ class GeminiProvider(LLMProvider):
             generation_config={"response_mime_type": "application/json"},
         )
         return response.text
+
+
+# Universal Provider Implementation
+class UniversalProvider(LLMProvider):
+    def __init__(self, model_size: str = "small", api_base: str = None, api_key: str = None, model_id: str = None):
+        self.api_base = api_base or os.getenv("OPENAI_API_BASE")
+        self.api_key = api_key or os.getenv("OPENAI_API_KEY")
+        self.custom_model_id = model_id
+        super().__init__(model_size)
+
+    def set_model_names(self) -> Dict[str, str]:
+        if self.custom_model_id:
+            return {
+                "small": self.custom_model_id,
+                "large": self.custom_model_id
+            }
+        return {
+            "small": "gpt-3.5-turbo",  # Default model names, can be overridden
+            "large": "gpt-4-turbo-preview"
+        }
+
+    def _initialize_client(self):
+        from openai import OpenAI
+
+        if not self.api_key:
+            raise ValueError("API key must be provided either through constructor or OPENAI_API_KEY environment variable")
+
+        client_kwargs = {
+            "api_key": self.api_key,
+        }
+
+        if self.api_base:
+            client_kwargs["base_url"] = self.api_base
+
+        return OpenAI(**client_kwargs)
+
+    def _create_response(self, prompt: str, system_message: str) -> str:
+        try:
+            response = self.client.chat.completions.create(
+                model=self.use_model,
+                response_format={"type": "json_object"},
+                messages=[
+                    {"role": "system", "content": system_message},
+                    {"role": "user", "content": prompt},
+                ],
+            )
+            return response.choices[0].message.content
+        except AttributeError:
+            # Fallback for providers that don't support the chat.completions structure
+            response = self.client.completions.create(
+                model=self.use_model,
+                prompt=f"{system_message}\n\nUser: {prompt}\n\nAssistant:",
+                response_format={"type": "json_object"},
+            )
+            return response.choices[0].text
