@@ -34,9 +34,10 @@ def generate_image_replicate(
     max_retries: int = 3,
     megapixels: float = 1,
 ) -> Optional[Image.Image]:
+    client = replicate.Client(api_token=config.get("image_api_key"))
     for attempt in range(max_retries):
         try:
-            output = replicate.run(
+            output = client.run(
                 config.get("image_model", "black-forest-labs/flux-schnell"),
                 input={
                     "prompt": prompt,

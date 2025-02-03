@@ -2,7 +2,14 @@
 
 # One Trillion and One Nights
 
-An experiment in using LLMs to procedurally generate browser-based Japanese-style RPGs.
+One Trillion and One Nights is a browser-based JRPG that uses artificial intelligence to create unique, dynamic gaming experiences. The game procedurally generates:
+- Engaging storylines and quests
+- Character dialogues and personalities
+- Beautiful anime-style artwork
+- Turn-based combat encounters
+- Dynamic world exploration
+
+To learn more about the making of this project, you can read my [Medium article](https://medium.com/p/e215d82f53e2).
 
 ## Installation
 
@@ -44,20 +51,10 @@ An experiment in using LLMs to procedurally generate browser-based Japanese-styl
 
 ## Usage
 
-1. **Set up API Keys**
-   First, set up your LLM provider API keys as environment variables:
-   ```bash
-   export OPENAI_API_KEY='your-api-key-here'
-   export ANTHROPIC_API_KEY='your-api-key-here'
-   export REPLICATE_API_TOKEN='your-api-token-here'
-   export GEMINI_API_KEY='your-api-key-here'
-   ```
-   You can add these to your shell configuration file (e.g., `.bashrc`, `.zshrc`) or set them before running the application.
+1. **Configure the Game**
+   Create a copy of `config.yaml.example` as `.config.yaml` and customize your game experience (see Configuration section below).
 
-2. **Configure the Game**
-   Edit `config.yaml` to customize your game experience (see Configuration section below).
-
-3. **Start the Game**
+2. **Start the Game**
    ```bash
    uvicorn web_main:app --host 127.0.0.1 --port 8000
    ```
@@ -65,38 +62,54 @@ An experiment in using LLMs to procedurally generate browser-based Japanese-styl
 
 ## Configuration
 
-The game can be customized through `config.yaml`. Here's an example configuration:
+The game requires configuration through `.config.yaml`. Here's a detailed example:
 
 ```yaml
-provider: anthropic    # LLM provider (openai/anthropic/gemini)
-model_size: large     # Model size (large/small)
-image_style: Retro    # Visual style (Retro/Classic/Modern/Chibi/Dark)
-image_model: black-forest-labs/flux-schnell # Image model
-use_cache: false      # Enable LLM response caching
-cheat_mode: false     # Enable debug mode with boosted stats
+# LLM Config
+llm_provider: openai
+llm_model_id: gpt-4o
+llm_endpoint: https://api.openai.com/v1
+llm_api_key: "<your-api-key>"
+
+# Image Model Config
+image_model: black-forest-labs/flux-schnell
+image_api_key: "<your-api-key>"
+image_style: Modern
+
+# Miscellaneous Config
+use_cache: false
+cheat_mode: false
 ```
 
-### Available Options
+### Configuration Details
 
-#### LLM Providers (`provider`)
-- `openai`
-- `anthropic`
-- `gemini`
+#### LLM Configuration
+Multiple LLM providers are supported. The default is OpenAI. To use a different provider, change the `llm_provider` to the desired provider. For each provider, you will need to set the `llm_model_id`, `llm_endpoint`, and `llm_api_key`.
 
-#### Model Sizes (`model_size`)
-- `large`
-- `small`
+- `llm_provider`: The LLM service provider.
+  - `openai`: OpenAI
+  - `anthropic`: Anthropic
+  - `gemini`: Google Gemini
+  - `universal`: Universal (Groq, OpenRouter, etc.)
+- `llm_model_id`: The specific model to use
+- `llm_endpoint`: API endpoint URL (when using Universal)
+- `llm_api_key`: Your API key for the LLM service
 
-#### Image Styles (`image_style`)
-- `Retro` - 16-bit era JRPG style
-- `Classic` - Traditional 90s anime style
-- `Modern` - Contemporary anime style
-- `Chibi` - Cute super-deformed style
-- `Dark` - Dark fantasy style
+#### Image Configuration
+Image generation is currently handled by Replicate. In order to use this, you will need to create an account and get an API key. To do so, go to https://replicate.com/ and sign up.
 
-#### Image Models (`image_model`)
-- `black-forest-labs/flux-schnell`
-- `black-forest-labs/flux-dev`
+- `image_model`: The model to use for image generation
+- `image_api_key`: Your API key for the image service
+- `image_style`: Visual style for generated images
+  - `Modern` - Contemporary anime style
+  - `Classic` - Traditional 90s anime style
+  - `Retro` - 16-bit era JRPG style
+  - `Chibi` - Cute super-deformed style
+  - `Dark` - Dark fantasy style
+
+#### Miscellaneous Options
+- `use_cache`: Enable/disable LLM response caching (true/false)
+- `cheat_mode`: Enable debug mode with boosted stats (true/false)
 
 ## Development
 
@@ -107,3 +120,7 @@ cheat_mode: false     # Enable debug mode with boosted stats
 4. Submit a pull request
 
 For bug reports or feature requests, please open an issue on GitHub.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

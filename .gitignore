@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+config.yaml
+
 # Distribution / packaging
 .Python
 build/
@@ -167,3 +169,4 @@ data/
 logs/
 
 .vscode/
+.config.yaml
