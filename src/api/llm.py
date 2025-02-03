@@ -46,15 +46,15 @@ class LLM:
         elif provider.lower() == "openai":
             from src.api.providers import OpenAIProvider
 
-            self.provider = OpenAIProvider(api_key=api_key)
+            self.provider = OpenAIProvider(api_key=api_key, model_id=model_id)
         elif provider.lower() == "anthropic":
             from src.api.providers import AnthropicProvider
 
-            self.provider = AnthropicProvider(api_key=api_key)
+            self.provider = AnthropicProvider(api_key=api_key, model_id=model_id)
         elif provider.lower() == "gemini":
             from src.api.providers import GeminiProvider
 
-            self.provider = GeminiProvider(api_key=api_key)
+            self.provider = GeminiProvider(api_key=api_key, model_id=model_id)
         else:
             raise ValueError(f"Unsupported provider: {provider}")
 
