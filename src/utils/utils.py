@@ -75,13 +75,8 @@ def calculate_hit_outcome(
 
 def load_config():
     """Load configuration from config.yaml file"""
-    config_path = Path("config.yaml")
+    config_path = Path(".config.yaml")
     if not config_path.exists():
-        return {
-            "provider": "openai",
-            "model_size": "large",
-            "use_cache": False,
-            "cheat_mode": False,
-        }
+        raise FileNotFoundError(f"Config file not found at {config_path}")
     with open(config_path, "r") as f:
         return yaml.safe_load(f)

@@ -1,9 +1,0 @@
-provider: universal
-model_size: large
-model_id: llama-3.3-70b-specdec
-image_style: Modern
-image_model: black-forest-labs/flux-schnell
-api_base: "http://your-custom-api-endpoint"
-api_key: "your-api-key"
-use_cache: false
-cheat_mode: false

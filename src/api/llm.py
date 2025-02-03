@@ -25,31 +25,36 @@ class LLM:
         # Use the shared config loader
         config = load_config()
         self.set_provider(
-            config.get("provider", "openai"),
-            config.get("model_size", "small"),
-            model_id=config.get("model_id"),
-            api_base=config.get("api_base"),
-            api_key=config.get("api_key")
+            config.get("llm_provider", "openai"),
+            model_id=config.get("llm_model_id"),
+            api_base=config.get("llm_endpoint"),
+            api_key=config.get("llm_api_key"),
         )
         self.use_cache = config.get("use_cache", False)
 
-    def set_provider(self, provider: str, model_size: str = "small", model_id: str = None, api_base: str = None, api_key: str = None):
+    def set_provider(
+        self,
+        provider: str,
+        model_id: str = None,
+        api_base: str = None,
+        api_key: str = None,
+    ):
         if provider.lower() == "universal":
             self.provider = UniversalProvider(
-                model_size=model_size,
-                model_id=model_id,
-                api_base=api_base,
-                api_key=api_key
+                model_id=model_id, api_base=api_base, api_key=api_key
             )
         elif provider.lower() == "openai":
             from src.api.providers import OpenAIProvider
-            self.provider = OpenAIProvider(model_size=model_size)
+
+            self.provider = OpenAIProvider(api_key=api_key)
         elif provider.lower() == "anthropic":
             from src.api.providers import AnthropicProvider
-            self.provider = AnthropicProvider(model_size=model_size)
+
+            self.provider = AnthropicProvider(api_key=api_key)
         elif provider.lower() == "gemini":
             from src.api.providers import GeminiProvider
-            self.provider = GeminiProvider(model_size=model_size)
+
+            self.provider = GeminiProvider(api_key=api_key)
         else:
             raise ValueError(f"Unsupported provider: {provider}")
 
